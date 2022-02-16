@@ -5,7 +5,6 @@ import modal from "./modal.js";
 const app = Vue.createApp({
   data() {
     return {
-      bsModal:'',  
       page:{},
       isNew: true,
       postId:"",
@@ -161,7 +160,7 @@ const app = Vue.createApp({
       } else { alert("請輸入帳號與密碼") }
     },
     openModal(data) {
-      this.bsModal.productModal.show();
+      this.$refs.myModal.open();
       //把id寫入postId
       //把products的資料取出傳到inputProudct
       if (this.isNew === false) {
@@ -188,7 +187,6 @@ const app = Vue.createApp({
         //取得所存在cookie的token
         this.sendToken();
         axios.get(`${this.apiInfo.url}/api/${this.apiInfo.path}/admin/products?page=${page}`).then((res) => {
-          
           this.products = res.data.products;
           this.page = res.data.pagination
         }).catch((err) => {
@@ -206,7 +204,6 @@ const app = Vue.createApp({
   },
   mounted() {
     this.getProduct();
-    this.bsModal =  new bootstrap.Modal(this.$refs.productModal)
   },
 })
 app.mount("#app")

@@ -2,11 +2,15 @@ export default {
     data(){
         return{
             inputData:JSON.parse(JSON.stringify(this.inputProduct)),
-        }
+            bsModal:'', 
+        };
     },
     methods:{
+        open(){
+            this.bsModal.show()
+        },
         close(){
-            this.$emit('close-modal')
+            this.bsModal.hide()
         },
         editPorductList(){
             this.$emit('send-input-data')
@@ -24,18 +28,21 @@ export default {
         }
     },
     props:["inputProduct","isNew"],
-    template:` <div class="modal fade" id="modalInputData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    mounted(){
+        this.bsModal =  new bootstrap.Modal(this.$refs.productModal) 
+    },
+    template:` <div class="modal fade" id="modalInputData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" ref="productModal">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">{{isNew?"新增產品":"編輯產品"}}</h5>
-                <button type="button" class="btn-close" @click="closeModal()"></button>
+                <button type="button" class="btn-close" @click="close()"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-4 my-3">
                         <p>主要圖片</p>
-                        <img :src="inputProduct.imageUrl" :alt="inputProduct.title" :title="inputProduct.title" class="img-fulid">
+                        <div> <img :src="inputProduct.imageUrl" :alt="inputProduct.title" :title="inputProduct.title" class="img-fluid"> </div>
                         <div class="from-group my-3">
                             <label class="form-label w-100" for="productImageUrl" >主要產品圖片</label>
                             <input type="text" id="productImageUrl" placeholder="請輸入主要產品圖片網址" v-model.trim="inputProduct.imageUrl" class="form-control" >
@@ -43,7 +50,7 @@ export default {
                         <template v-if="inputProduct.imagesUrl.length>0">
                             <div class="from-group my-3" v-for="(item,index) in inputProduct.imagesUrl" :key="item+1">
                                 <p>其他圖片{{index+1}}</p>
-                                <img :src="item" :alt="inputProduct.title">
+                                <img :src="item" class="img-fluid" :alt="inputProduct.title">
                                 <label class="form-label w-100" for="productImageUrl" >其他產品圖片{{index+1}}</label>
                                 <input type="text" id="productImageUrl" placeholder="請輸其他產品圖片網址" v-model.trim="inputProduct.imagesUrl[index]" class="form-control" >
                             </div>
@@ -101,7 +108,7 @@ export default {
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @click="closeModal()">關閉</button>
+                <button type="button" class="btn btn-secondary" @click="close()">關閉</button>
                 <button type="button" class="btn btn-primary" @click="editPorductList()">確定</button>
             </div>
         </div>
